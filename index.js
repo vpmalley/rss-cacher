@@ -1,7 +1,6 @@
 
   var fetcher = require('./fetcher');
   var store  = require('./store');
-  var feedparser = require('./feedsearcher');
   var stylus = require('stylus');
   var express = require('express');
   var app = express();
@@ -30,7 +29,6 @@
   app.get('/home', function(req, res){
     store.retrieveAllFeeds(function(feeds) {
       console.log(feeds.length);
-      console.log(feeds[0]);
       res.render('home', {'feeds': feeds});
     });
   });
@@ -47,13 +45,6 @@
     console.log("adding feed at " + req.query.url);
     fetcher.fetch(req.query.url);
     res.render('message', {'message' : 'Programme ajouté'});
-  });
-  
-  app.get('/feed/parse', function(req, res){
-    //console.log("parsing file for feeds at " + req.query.fileUrl)
-    //feedparser.parse('/home/vince/workspace/rss-cacher/data/podcasts-fi.html', "http[\w\/-\._]*\.xml"); 
-    // http://radiofrance-podcast.net/podcast09/rss_11736.xml
-    res.end('unavailable');
   });
   
   app.get('/feed/refresh', function(req, res){
@@ -75,13 +66,7 @@
   
   app.get('/item/all', function(req, res){
     store.retrieveAllItems(function(docs) {
-      /*
-      for (var i = 0; i < docs.length; i++) {
-        console.log(docs[i]['_id']);
-      }
-      */
       console.log(docs.length);
-      console.log(docs[0]);
       res.render('items', {'message': 'tous les programmes', 'docs': docs});
     });
   });
@@ -93,7 +78,6 @@
       store.retrieveAllItemsForFeed(req.query.feed, function(docs) {
         console.log(docs.length);
         res.render('items', {'message': 'le programme ' + req.query.feed, 'docs': docs});
-        
       });
     }
   });

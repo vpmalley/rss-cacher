@@ -25,13 +25,15 @@ html(lang="en")
     ul
       each doc in docs
         .item
-          hr
           h2
             a(href=doc.link)= doc.title
           p= doc.date
           p= doc.description
-          a(href=doc.guid) Télécharger (clic droit puis enregistrer sous...)
-          br
+          table
+            tr
+              td
+                .btn
+                  a(href=doc.guid, download=doc.title) Télécharger (clic droit puis enregistrer sous...)
           br
           audio(src=doc.guid, preload="none", controls) Your browser does not support the <code>audio</code> element.
           br

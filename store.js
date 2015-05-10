@@ -20,15 +20,15 @@ module.exports = {
     });
   },
 
-  storeFeed : function (feedurl) {
+  storeFeed : function (feedurl, feedname) {
     var MongoClient = require('mongodb').MongoClient;
  
     MongoClient.connect('mongodb://127.0.0.1:27017/test', function(err, db) {
       if(err) throw err;
    
-      var collection = db.collection('rss-feedurl');
+      var collection = db.collection('rss-feed');
       
-      collection.updateOne({url : feedurl}, {url : feedurl}, 
+      collection.updateOne({url : feedurl}, {url : feedurl, title : feedname}, 
       {upsert : true}, function(err, docs) {
         if (err) {
           console.log(err);
@@ -72,9 +72,12 @@ module.exports = {
     MongoClient.connect('mongodb://127.0.0.1:27017/test', function(err, db) {
       if(err) throw err;
    
-      var collection = db.collection('rss-feedurl');
+      var collection = db.collection('rss-feed');
       collection.find().toArray(function(err, docs) {
         db.close();
+        for (var i = 0; i < docs.length; i++) {
+          docs[i].link = "/item/search?feed=" + docs[i].title;
+        }
         callback(docs);
       });
     });

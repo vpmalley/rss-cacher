@@ -1,22 +1,37 @@
 doctype html
 html(lang="en")
   head
-    title= 'items'
+    title= 'rss-cacher - Émissions pour ' + message  
     style
       include ../static/style.css
       
   body
-    h1 Émissions pour cette recherche
+  
+    table
+      tr
+        td
+          .btn
+            a(href='/home') Accueil
+        td
+          .btn
+            a(href='/feed/refresh') Rafraîchir toutes les émissions
+        td
+          .btn
+            a(href='/item/all') Afficher la liste de toutes les émissions
+            
+    h1= 'Émissions pour ' + message
+    br
     
     ul
       each doc in docs
-        #item
+        .item
           hr
           h2
             a(href=doc.link)= doc.title
           p= doc.date
           p= doc.description
-          a(href=doc.guid) Écouter (clic droit puis enregistrer sous pour enregistrer)
+          a(href=doc.guid) Télécharger (clic droit puis enregistrer sous...)
           br
           br
+          audio(src=doc.guid, preload="none", controls) Your browser does not support the <code>audio</code> element.
           br

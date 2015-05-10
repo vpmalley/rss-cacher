@@ -1,0 +1,30 @@
+doctype html
+html(lang="en")
+  head
+    title= 'rss-cacher'
+    style
+      include ../static/style.css
+      
+  body
+  
+    table
+      tr
+        td
+          .btn
+            a(href='/home') Accueil
+        td
+          .btn
+            a(href='/feed/refresh') Rafraîchir toutes les émissions
+        td
+          .btn
+            a(href='/item/all') Afficher la liste de toutes les émissions
+    
+    br
+    h1= message
+    br
+    
+    table
+      tr
+        td
+          .btn
+            a(href='/home') Retour à l'accueil

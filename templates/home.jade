@@ -1,0 +1,27 @@
+doctype html
+html(lang="en")
+  head
+    title= 'Home - rss-cacher'
+    style
+      include ../static/style.css
+      
+  body
+    h1 Bonjour
+  
+    table
+      tr
+        td
+          .btn
+            a(href='/feed/refresh') Rafraîchir toutes les émissions
+        td
+          .btn
+            a(href='/item/all') Afficher la liste de toutes les émissions
+    
+    h2 Les programmes
+    
+    ul
+      each feed in feeds
+        #feed
+          a(href=feed.link)= feed.title
+          br
+

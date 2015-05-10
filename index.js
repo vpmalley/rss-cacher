@@ -28,7 +28,11 @@
   });
 
   app.get('/home', function(req, res){
-    res.end(getHomePage());
+    store.retrieveAllFeeds(function(feeds) {
+      console.log(feeds.length);
+      console.log(feeds[0]);
+      res.render('home', {'feeds': feeds});
+    });
   });
   
   app.get('/feed', function(req, res){
@@ -41,16 +45,15 @@
  
   app.get('/feed/add', function(req, res){
     console.log("adding feed at " + req.query.url);
-    store.storeFeed(req.query.url);
     fetcher.fetch(req.query.url);
-    res.end('feed added');
+    res.render('message', {'message' : 'Programme ajouté'});
   });
   
   app.get('/feed/parse', function(req, res){
-    console.log("parsing file for feeds at " + req.query.fileUrl)
-    feedparser.parse('/home/vince/workspace/rss-cacher/data/podcasts-fi.html', "http[\w\/-\._]*\.xml"); 
+    //console.log("parsing file for feeds at " + req.query.fileUrl)
+    //feedparser.parse('/home/vince/workspace/rss-cacher/data/podcasts-fi.html', "http[\w\/-\._]*\.xml"); 
     // http://radiofrance-podcast.net/podcast09/rss_11736.xml
-    res.end('feeds added');
+    res.end('unavailable');
   });
   
   app.get('/feed/refresh', function(req, res){
@@ -63,7 +66,7 @@
         }
       }
     );
-    res.end('feeds refreshed');
+    res.render('message', {'message' : 'Émissions rafraîchies'});
   });
   
   //----------
@@ -78,10 +81,22 @@
       }
       */
       console.log(docs.length);
-      res.render('items', {'docs': docs});
+      console.log(docs[0]);
+      res.render('items', {'message': 'tous les programmes', 'docs': docs});
     });
   });
   
+  app.get('/item/search', function(req, res){
+    
+    // search by feed name
+    if (req.query.feed) {
+      store.retrieveAllItemsForFeed(req.query.feed, function(docs) {
+        console.log(docs.length);
+        res.render('items', {'message': 'le programme ' + req.query.feed, 'docs': docs});
+        
+      });
+    }
+  });
   
   
   

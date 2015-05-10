@@ -33,11 +33,9 @@ module.exports = {
       //console.log(meta);
       //console.log('\n\n----------\n\n');
    
+      store.storeFeed(feedurl, meta.title);
       while (item = stream.read()) {
         store.storeItem(item);
-        // TODO persist feed item
-  //      console.log('\n\n----------\n\n');
-  //      console.log(item);
       }
     });
   }

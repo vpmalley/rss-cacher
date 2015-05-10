@@ -2,20 +2,21 @@ doctype html
 html(lang="en")
   head
     title= 'items'
+    style
+      include ../static/style.css
+      
   body
-    h1 RSS items for your request
-
-    p.
-      These are the items you requested
+    h1 Émissions pour cette recherche
     
     ul
       each doc in docs
-        div. item
-        a(href=doc.link)= doc.title 
-        br.
-        p= doc.date
-        p= doc.description
-        a(href=doc.guid) clic droit puis enregistrer sous
-        br.
-        br.
-        br.
+        #item
+          hr
+          h2
+            a(href=doc.link)= doc.title
+          p= doc.date
+          p= doc.description
+          a(href=doc.guid) Écouter (clic droit puis enregistrer sous pour enregistrer)
+          br
+          br
+          br

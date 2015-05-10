@@ -2,19 +2,21 @@
 @import url("http://fonts.googleapis.com/css?family=Raleway:100,200,300,400,500,600,700,800,900");
 
 	body {
-		background: #222833;
+		background: #444a55;
 	}
 
 	body, input, select, textarea {
-		color: #515151;
+		color: #b1b1b1;
 		font-family: 'Raleway', sans-serif;
 		font-size: 14pt;
 		font-weight: 300;
 		line-height: 1.75em;
+		width: 80%;
+		margin: 1em;
 	}
 
 	a {
-		color: #a1a1a1;
+		color: #999999;
 		text-decoration: none;
 	}
 

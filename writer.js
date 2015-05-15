@@ -11,6 +11,16 @@ module.exports = {
     return fn({'message': 'le programme ' + feedtitle, 'docs': items});
   },
   
+  getFilePath : function (feedtitle) {
+    var today = new Date();
+    var dd = today.getDate();
+    var mm = today.getMonth()+1; //January is 0!
+    var yyyy = today.getFullYear();
+    var date = yyyy + '-' + mm + '-' + dd;
+    var filepath = '../vpmalley.github.io/_posts/' + date + '-' + feedtitle.replace(' ', '-') + '.html';
+    return filepath;
+  },
+  
   /**
    * outputs some content to a file named as passed
    * @param filename the name of the file to use

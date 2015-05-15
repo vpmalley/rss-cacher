@@ -83,6 +83,10 @@
     }
   });
   
+  //----------
+  // printing feeds
+  //----------
+  
   app.get('/feed/print', function(req, res){
     
     store.retrieveAllFeeds(
@@ -101,7 +105,9 @@
       docs = docs || {};
       console.log(docs.length);
       var doc = writer.generateHtml(feedtitle, docs);
-      writer.writeDoc('./output/' + feedtitle + '.html', doc);
+      var filepath = writer.getFilePath(feedtitle);
+      console.log(filepath);
+      writer.writeDoc(filepath, doc);
     });
   }
   

@@ -1,6 +1,7 @@
 
   var fetcher = require('./fetcher');
   var store  = require('./store');
+  var writer  = require('./writer');
   var stylus = require('stylus');
   var express = require('express');
   var app = express();
@@ -82,7 +83,27 @@
     }
   });
   
+  app.get('/feed/print', function(req, res){
+    
+    store.retrieveAllFeeds(
+      function (docs) {
+        for (var i = 0; i < docs.length; i++) {
+          console.log("printing feed " + docs[i].title);
+          printFeed(docs[i].title);
+        }
+        res.end('printed');
+      }
+    );
+  });
   
+  function printFeed(feedtitle) {
+      store.retrieveAllItemsForFeed(feedtitle, function(docs) {
+      docs = docs || {};
+      console.log(docs.length);
+      var doc = writer.generateHtml(feedtitle, docs);
+      writer.writeDoc('./output/' + feedtitle + '.html', doc);
+    });
+  }
   
   app.listen(process.argv[2]);
 

@@ -109,7 +109,7 @@
       docs = docs || {};
       console.log(docs.length);
       var doc = writer.generateHtml(feedtitle, docs);
-      var filepath = writer.getFilePath(feedtitle);
+      var filepath = writer.getFilePath(process.argv[3], feedtitle);
       console.log(filepath);
       writer.writeDoc(filepath, doc);
     });

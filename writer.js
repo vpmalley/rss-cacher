@@ -11,13 +11,13 @@ module.exports = {
     return fn({'message': 'le programme ' + feedtitle, 'docs': items});
   },
   
-  getFilePath : function (feedtitle) {
+  getFilePath : function (folder, feedtitle) {
     var today = new Date();
     var dd = today.getDate();
     var mm = today.getMonth()+1; //January is 0!
     var yyyy = today.getFullYear();
     var date = yyyy + '-' + mm + '-' + dd;
-    var filepath = '../vpmalley.github.io/_posts/' + date + '-' + feedtitle.replace(' ', '-') + '.html';
+    var filepath = folder + '/' + date + '-' + feedtitle.replace(' ', '-') + '.html';
     return filepath;
   },
   

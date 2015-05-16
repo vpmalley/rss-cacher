@@ -7,7 +7,7 @@ module.exports = {
    */
   generateHtml : function (feedtitle, items) {
     var jade = require('jade');
-    var fn = jade.compileFile('./templates/items.jade');
+    var fn = jade.compileFile('./templates/items-gh.jade');
     return fn({'message': 'le programme ' + feedtitle, 'docs': items});
   },
   
@@ -27,6 +27,7 @@ module.exports = {
    * @param doc content to write to the file
    */
   writeDoc : function (filepath, doc) {
+    doc = "---\ntags : radiofrance\n---\n" + doc;
     var fse = require('fs-extra');
     fse.outputFile(filepath, doc, function (err) {
       if (err) {

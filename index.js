@@ -43,9 +43,13 @@
   //----------
  
   app.get('/feed/add', function(req, res){
-    console.log("adding feed at " + req.query.url);
-    fetcher.fetch(req.query.url);
-    res.render('message', {'message' : 'Programme ajouté'});
+    if (req.query.url) {
+      console.log("adding feed at " + req.query.url);
+      fetcher.fetch(req.query.url);
+      res.render('message', {'message' : 'Programme ajouté'});
+    } else {
+      res.render('message', {'message' : 'on attend le format : /feed/add?url=<page rss fu flux>'});
+    }
   });
   
   app.get('/feed/refresh', function(req, res){

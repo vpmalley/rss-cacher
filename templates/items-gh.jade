@@ -1,0 +1,34 @@
+doctype html
+html(lang="en")
+  head
+    meta(charset="utf-8")
+    title= 'rss-cacher - Émissions pour ' + message  
+    style
+      include ../static/style.css
+      
+  body
+  
+    table
+      tr
+        td
+          .btn
+            a(href='/radiofrance.html') Accueil - toutes les émissions
+            
+    h1= 'Émissions pour ' + message
+    br
+    
+    ul
+      each doc in docs
+        .item
+          h2
+            a(href=doc.link)= doc.title
+          p= doc.date
+          p= doc.description
+          table
+            tr
+              td
+                .btn
+                  a(href=doc.guid, download=doc.title) Télécharger (clic droit puis enregistrer sous...)
+          br
+          audio(src=doc.guid, preload="none", controls) Your browser does not support the <code>audio</code> element.
+          br

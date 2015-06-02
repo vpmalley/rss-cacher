@@ -8,32 +8,6 @@
 
 # add-apt-repository ppa:chris-lea/node.js 2237, 4384
 
-$script_mongodb = <<SCRIPT
-curl -sL https://deb.nodesource.com/setup | sudo bash -
-apt-get install -y nodejs git
-npm install npm -g
-
-mkdir /home/vagrant/mongodb
-cd /home/vagrant/mongodb
-
-mkdir /data
-sudo chown vagrant:vagrant /data
-mkdir /data/db
-
-cd /home/vagrant
-git clone https://github.com/vpmalley/vpmalley.github.io.git
-
-cd /home/vagrant/mongodb
-curl -O http://downloads.mongodb.org/linux/mongodb-linux-x86_64-3.0.3.tgz
-tar -zxvf mongodb-linux-x86_64-3.0.3.tgz
-
-cd /home/vagrant/rss-cacher
-chmod +x ./start_node.sh
-chmod +x ./start_mongod.sh
-
-date > /etc/vagrant_provisioned_at
-SCRIPT
-
 Vagrant.configure(2) do |config|
   # The most common configuration options are documented and commented below.
   # For a complete reference, please see the online documentation at
@@ -70,7 +44,7 @@ Vagrant.configure(2) do |config|
   # config.vm.synced_folder "../data", "/vagrant_data"
   config.vm.synced_folder ".", "/home/vagrant/rss-cacher", owner: "vagrant", group: "vagrant"
 
-  config.vm.provision "shell", inline: $script_mongodb
+  config.vm.provision "shell", path: "provision.sh"
   
   # Provider-specific configuration so you can fine-tune various
   # backing providers for Vagrant. These expose provider-specific options.

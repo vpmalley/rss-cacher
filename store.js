@@ -6,7 +6,7 @@ module.exports = {
     MongoClient.connect('mongodb://127.0.0.1:27017/test', function(err, db) {
       if(err) throw err;
    
-      var collection = db.collection('rss-item');
+      var collection = db.collection('rssitem');
       
       console.log("adding " + item.guid);
       collection.updateOne({guid : item.guid}, item, 
@@ -26,7 +26,7 @@ module.exports = {
     MongoClient.connect('mongodb://127.0.0.1:27017/test', function(err, db) {
       if(err) throw err;
    
-      var collection = db.collection('rss-feed');
+      var collection = db.collection('rssfeed');
       
       collection.updateOne({url : feedurl}, {url : feedurl, title : feedname, tags : tags}, 
       {upsert : true}, function(err, docs) {
@@ -44,8 +44,8 @@ module.exports = {
     MongoClient.connect('mongodb://127.0.0.1:27017/test', function(err, db) {
       if(err) throw err;
    
-      var collection = db.collection('rss-item');
-      collection.find().toArray(function(err, docs) {
+      var collection = db.collection('rssitem');
+      collection.find().limit(50).toArray(function(err, docs) {
         db.close();
         callback(docs);
       });
@@ -58,7 +58,7 @@ module.exports = {
     MongoClient.connect('mongodb://127.0.0.1:27017/test', function(err, db) {
       if(err) throw err;
    
-      var collection = db.collection('rss-item');
+      var collection = db.collection('rssitem');
       collection.find({'meta.title' : feedname}).toArray(function(err, docs) {
         db.close();
         callback(docs);
@@ -72,7 +72,7 @@ module.exports = {
     MongoClient.connect('mongodb://127.0.0.1:27017/test', function(err, db) {
       if(err) throw err;
    
-      var collection = db.collection('rss-feed');
+      var collection = db.collection('rssfeed');
       collection.find().toArray(function(err, docs) {
         db.close();
         for (var i = 0; i < docs.length; i++) {

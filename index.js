@@ -1,4 +1,5 @@
 
+  var finder = require('./finder');
   var fetcher = require('./fetcher');
   var store  = require('./store');
   var writer  = require('./writer');
@@ -37,7 +38,7 @@
   app.get('/feed', function(req, res){
     res.end(getHomePage());
   });
-
+  
   //----------
   // adding feeds
   //----------
@@ -63,6 +64,11 @@
       }
     );
     res.render('message', {'message' : 'Émissions rafraîchies'});
+  });
+
+  app.get('/rf/parse', function(req, res){
+    finder.findFeeds('./franceinter.html');
+      res.render('message', {'message' : 'De nombreux programmes sont ajoutés, cela va prendre un moment.'});
   });
   
   //----------

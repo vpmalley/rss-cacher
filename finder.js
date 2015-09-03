@@ -1,0 +1,26 @@
+module.exports = {
+  findFeeds : function (pageurl) {
+    
+    var fs = require('fs');
+    var extractor = require('file-extractor');
+    var fetcher = require('./fetcher');      
+    var async = require("async");
+   
+    var feedUrls = [];
+    var s = fs.createReadStream(pageurl, {encoding: 'utf8'});
+    extractor().matches(/http\:\/\/.{10,70}\d{4,5}\.xml/,function(m){
+      feedUrls.push(m[0]);
+    }).on('end', function(vars){
+      s.close();
+      async.eachSeries(feedUrls, function iterator(item, callback) {
+        async.setImmediate(function () {
+          console.log("adding feed at " + item);
+          fetcher.fetch(item);
+        });
+        callback();
+      });
+      
+    }).start(s);
+  }
+  
+};

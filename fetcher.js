@@ -37,6 +37,7 @@ module.exports = {
       while (item = stream.read()) {
         store.storeItem(item);
       }
+      stream.close();
     });
   }
   

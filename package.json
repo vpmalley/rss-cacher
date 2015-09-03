@@ -22,12 +22,14 @@
   },
   "homepage": "https://github.com/vpmalley/rss-cacher#readme",
   "dependencies": {
+    "async": "^1.4.2",
     "express": "^4.12.3",
     "feedparser": "^1.0.1",
     "file-extractor": "^0.6.1",
     "fs-extra": "^0.18.3",
     "jade": "^1.9.2",
     "mongodb": "^2.0.28",
+    "node-async": "0.0.1",
     "request": "^2.55.0",
     "stylus": "^0.51.1"
   }

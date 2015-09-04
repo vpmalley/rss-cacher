@@ -5,6 +5,7 @@
   var writer  = require('./writer');
   var stylus = require('stylus');
   var express = require('express');
+  var async = require("async");
   var app = express();
   
   app.set('view engine', 'jade');
@@ -46,7 +47,7 @@
   app.get('/feed/add', function(req, res){
     if (req.query.url) {
       console.log("adding feed at " + req.query.url);
-      fetcher.fetch(req.query.url);
+      fetcher.fetch(req.query.url, true);
       res.render('message', {'message' : 'Programme ajouté'});
     } else {
       res.render('message', {'message' : 'on attend le format : /feed/add?url=<page rss fu flux>'});
@@ -55,14 +56,27 @@
   
   app.get('/feed/refresh', function(req, res){
     console.log("refreshing feeds ");
-    store.retrieveAllFeeds(
-      function (docs) {
-        for (var i = 0; i < docs.length; i++) {
-          console.log("refreshing feed at " + docs[i].url);
-          fetcher.fetch(docs[i].url);
+    
+    if (req.query.feed) {
+      store.retrieveFeed(req.query.feed,
+        function (docs) {
+          fetcher.fetch(docs[0].url, true);
         }
-      }
-    );
+      );
+    } else {
+      store.retrieveAllFeeds(
+        function (docs) {
+          async.eachSeries(docs, function iterator(item, callback) {
+            async.setImmediate(function () {
+              console.log("refreshing feed at " + item.url);
+              fetcher.fetch(item.url, true);
+            });
+            setTimeout(callback, 1000);
+          });
+        }
+      );      
+    }
+    
     res.render('message', {'message' : 'Émissions rafraîchies'});
   });
 
@@ -78,7 +92,7 @@
   app.get('/item/all', function(req, res){
     store.retrieveAllItems(function(docs) {
       console.log(docs.length);
-      res.render('items', {'message': 'tous les programmes', 'docs': docs});
+      res.render('items', {'message': 'tous les programmes', 'docs': docs, 'query' : ''});
     });
   });
   
@@ -88,7 +102,7 @@
     if (req.query.feed) {
       store.retrieveAllItemsForFeed(req.query.feed, function(docs) {
         console.log(docs.length);
-        res.render('items', {'message': 'le programme ' + req.query.feed, 'docs': docs});
+        res.render('items', {'message': 'le programme ' + req.query.feed, 'docs': docs, 'query' : '?feed=' + req.query.feed});
       });
     }
   });

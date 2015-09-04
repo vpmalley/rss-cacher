@@ -11,7 +11,7 @@ html(lang="en")
       tr
         td
           .btn
-            a(href='/feed/refresh') Rafraîchir toutes les émissions
+            a(href='/feed/refresh') Rafraîchir tous les programmes
         td
           .btn
             a(href='/item/all') Afficher la liste de toutes les émissions
@@ -20,7 +20,5 @@ html(lang="en")
     
     ul
       each feed in feeds
-        #feed
+        .feed
           a(href=feed.link)= feed.title
-          br
-

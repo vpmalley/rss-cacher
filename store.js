@@ -8,7 +8,7 @@ module.exports = {
    
       var collection = db.collection('rssitem');
       
-      console.log("adding " + item.guid);
+      console.log("adding/udpating " + item.guid);
       collection.updateOne({guid : item.guid}, item, 
       {upsert : true}, function(err, docs) {
         if (err) {
@@ -28,6 +28,7 @@ module.exports = {
    
       var collection = db.collection('rssfeed');
       
+      console.log("adding/udpating " + feedname);
       collection.updateOne({url : feedurl}, {url : feedurl, title : feedname, tags : tags}, 
       {upsert : true}, function(err, docs) {
         if (err) {
@@ -66,6 +67,23 @@ module.exports = {
     });
   },
   
+  retrieveFeed : function (feedname, callback) {
+    var MongoClient = require('mongodb').MongoClient;
+ 
+    MongoClient.connect('mongodb://127.0.0.1:27017/test', function(err, db) {
+      if(err) throw err;
+   
+      var collection = db.collection('rssfeed');
+      collection.find({'title' : feedname}).toArray(function(err, docs) {
+        db.close();
+        for (var i = 0; i < docs.length; i++) {
+          docs[i].link = "/item/search?feed=" + docs[i].title;
+        }
+        callback(docs);
+      });
+    });
+  },
+  
   retrieveAllFeeds : function (callback) {
     var MongoClient = require('mongodb').MongoClient;
  
@@ -84,7 +102,3 @@ module.exports = {
   }
 }
 
-
-
-
-// item: guid, meta.title

@@ -1,5 +1,5 @@
 module.exports = {
-  fetch : function (feedurl) {
+  fetch : function (feedurl, parseItems) {
 
     var FeedParser = require('feedparser');
     var request = require('request');
@@ -23,21 +23,21 @@ module.exports = {
     feedparser.on('error', function(error) {
       // always handle errors 
     });
+    
+    feedparser.on('meta', function (meta) {
+      store.storeFeed(feedurl, meta.title);
+    });
     feedparser.on('readable', function() {
       // This is where the action is! 
       var stream = this;
       var meta = this.meta // **NOTE** the "meta" is always available in the context of the feedparser instance 
       var item;
       
-      //console.log('\n\n----------\n\n');
-      //console.log(meta);
-      //console.log('\n\n----------\n\n');
-   
-      store.storeFeed(feedurl, meta.title);
-      while (item = stream.read()) {
-        store.storeItem(item);
+      if (parseItems) {
+        while (item = stream.read()) {
+          store.storeItem(item);
+        }
       }
-      stream.close();
     });
   }
   

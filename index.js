@@ -81,7 +81,8 @@
   });
 
   app.get('/rf/parse', function(req, res){
-    finder.findFeeds('./franceinter.html');
+    finder.findFeeds('./franceinter.html', 'France Inter');
+    finder.findFeeds('./francemusique.html', 'France Musique');
       res.render('message', {'message' : 'De nombreux programmes sont ajoutés, cela va prendre un moment.'});
   });
   

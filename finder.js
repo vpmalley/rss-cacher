@@ -1,5 +1,5 @@
 module.exports = {
-  findFeeds : function (pageurl) {
+  findFeeds : function (pageurl, radio) {
     
     var fs = require('fs');
     var extractor = require('file-extractor');
@@ -15,8 +15,8 @@ module.exports = {
       s.close();
       async.eachSeries(feedUrls, function iterator(item, callback) {
         async.setImmediate(function () {
-          console.log("adding feed at " + item);
-          fetcher.fetch(item, false);
+          console.log(radio + ": finding " + item);
+          fetcher.fetch(item, false, radio);
         });
         setTimeout(callback, 1000);
       });

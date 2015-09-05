@@ -20,7 +20,7 @@ module.exports = {
     });
   },
 
-  storeFeed : function (feedurl, feedname, tags) {
+  storeFeed : function (feedurl, feedname, radio, tags) {
     var MongoClient = require('mongodb').MongoClient;
  
     MongoClient.connect('mongodb://127.0.0.1:27017/test', function(err, db) {
@@ -29,7 +29,15 @@ module.exports = {
       var collection = db.collection('rssfeed');
       
       console.log("adding/udpating " + feedname);
-      collection.updateOne({url : feedurl}, {url : feedurl, title : feedname, tags : tags}, 
+      feed =  {
+        url : feedurl, 
+        title : feedname, 
+        tags : tags
+      };
+      if (radio) {
+        feed.radio = radio;
+      }
+      collection.updateOne({url : feedurl}, feed, 
       {upsert : true}, function(err, docs) {
         if (err) {
           console.log(err);

@@ -1,5 +1,5 @@
 module.exports = {
-  fetch : function (feedurl, parseItems) {
+  fetch : function (feedurl, parseItems, radio) {
 
     var FeedParser = require('feedparser');
     var request = require('request');
@@ -25,12 +25,11 @@ module.exports = {
     });
     
     feedparser.on('meta', function (meta) {
-      store.storeFeed(feedurl, meta.title);
+      store.storeFeed(feedurl, meta.title, radio);
     });
     feedparser.on('readable', function() {
       // This is where the action is! 
       var stream = this;
-      var meta = this.meta // **NOTE** the "meta" is always available in the context of the feedparser instance 
       var item;
       
       if (parseItems) {

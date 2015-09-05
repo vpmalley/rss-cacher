@@ -22,5 +22,6 @@ tar -zxvf mongodb-linux-x86_64-3.0.3.tgz
 cd /home/vagrant/rss-cacher
 chmod +x ./start_node.sh
 chmod +x ./start_mongod.sh
+chmod +x ./stop_mongod.sh
 
 date > /etc/vagrant_provisioned_at

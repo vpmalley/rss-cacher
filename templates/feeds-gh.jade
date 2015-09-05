@@ -1,0 +1,21 @@
+doctype html
+html(lang="en")
+  head
+    title= 'Programmes - rss-cacher'
+    style
+      include ../static/style.css
+      
+  body
+    
+    table
+      tr
+        td
+          .btn
+            a(href='/radiofrance.html') Toutes les radios
+    
+    h2 Les programmes
+    
+    ul
+      each feed in feeds
+        .feed
+          a(href=feed.link)= feed.title

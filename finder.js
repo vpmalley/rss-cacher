@@ -3,9 +3,11 @@ module.exports = {
     
     var fs = require('fs');
     var extractor = require('file-extractor');
-    var fetcher = require('./fetcher');      
+    var fetcher = require('./fetcher');
+    var store = require('./store');
     var async = require("async");
    
+    store.connect();
     var feedUrls = [];
     var s = fs.createReadStream(pageurl, {encoding: 'utf8'});
     extractor().matches(/http\:\/\/.{10,70}\d{4,5}\.xml/,function(m){
@@ -19,6 +21,8 @@ module.exports = {
           fetcher.fetch(item, false, radio);
         });
         setTimeout(callback, 1000);
+      }, function() {
+        store.disconnect();
       });
       
     }).start(s);

@@ -83,14 +83,29 @@
   });
 
   app.get('/rf/parse', function(req, res){
-    finder.findFeeds('./franceinter.html', 'France Inter');
-    finder.findFeeds('./francemusique.html', 'France Musique');
+    //finder.findFeeds('./francemusique.html', 'fm');
+    finder.findFeeds('./franceinter.html', 'fi');
+    //finder.findFeeds('./franceculture.html', 'fc');
       res.render('message', {'message' : 'De nombreux programmes sont ajoutés, cela va prendre un moment.', 'link' : '/home'});
   });
   
   //----------
   // displaying feeds
   //----------
+
+  app.get('/feed/display', function(req, res){
+    if (req.query.radio) {
+      store.retrieveRadioFeeds(req.query.radio, function(feeds) {
+        console.log(feeds.length);
+        res.render('home', {'feeds': feeds});
+      });
+    } else {
+      store.retrieveAllFeeds(function(feeds) {
+        console.log(feeds.length);
+        res.render('home', {'feeds': feeds});
+      });      
+    }
+  });
   
   app.get('/item/all', function(req, res){
     store.retrieveAllItems(function(docs) {
@@ -115,26 +130,36 @@
   //----------
   
   app.get('/feed/print', function(req, res){
-    
-    store.retrieveAllFeeds(
-      function (docs) {
-        for (var i = 0; i < docs.length; i++) {
-          console.log("printing feed " + docs[i].title);
-          printFeed(docs[i].title);
+    if (req.query.radio) {
+      store.retrieveRadioFeeds(req.query.radio,
+        function (docs) {
+          for (var i = 0; i < docs.length; i++) {
+            console.log("printing feed " + docs[i].title);
+            printFeed(req.query.radio, docs[i].title);
+            docs[i].link = './' + docs[i].title.replace(' ', '-') + '.html'
+          }
+          printRadio(req.query.radio, docs);
+          res.end('printed');
         }
-        res.end('printed');
-      }
-    );
+      );
+    }
   });
+
+  function printRadio(radio, feeds) {
+    var doc = writer.generateRadioHtml(radio, feeds);
+    var filepath = writer.getFilePath(radio, 'index');
+    console.log(filepath);
+    writer.writeDoc('output/' + filepath, doc);
+  }
   
-  function printFeed(feedtitle) {
+  function printFeed(folder, feedtitle) {
       store.retrieveAllItemsForFeed(feedtitle, function(docs) {
       docs = docs || {};
       console.log(docs.length);
-      var doc = writer.generateHtml(feedtitle, docs);
-      var filepath = writer.getFilePath(process.argv[3], feedtitle);
+      var doc = writer.generateFeedHtml(feedtitle, docs);
+      var filepath = writer.getFilePath(folder, feedtitle);
       console.log(filepath);
-      writer.writeDoc(filepath, doc);
+      writer.writeDoc('output/' + filepath, doc);
     });
   }
   

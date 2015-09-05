@@ -5,19 +5,34 @@ module.exports = {
    * @param items the RSS items to add to the markdown document
    * @return some string containing the markdown document
    */
-  generateHtml : function (feedtitle, items) {
+  generateFeedHtml : function (feedtitle, items) {
     var jade = require('jade');
-    var fn = jade.compileFile('./templates/items-gh.jade');
+    var fn = jade.compileFile('./templates/items-gh.jade', { pretty : '\t'});
     return fn({'message': 'le programme ' + feedtitle, 'docs': items});
   },
   
+  /**
+   * outputs some content to a file named as passed
+   * @param radio the title for the feed (for display)
+   * @param feeds the feeds to add to the markdown document
+   * @return some string containing the markdown document
+   */
+  generateRadioHtml : function (radio, feeds) {
+    var jade = require('jade');
+    var fn = jade.compileFile('./templates/feeds-gh.jade', { pretty : '\t'});
+    return fn({'message': 'Les programmes de ' + radio, 'feeds': feeds});
+  },
+  
   getFilePath : function (folder, feedtitle) {
+    /*
     var today = new Date();
     var dd = today.getDate();
     var mm = today.getMonth()+1; //January is 0!
     var yyyy = today.getFullYear();
     var date = yyyy + '-' + mm + '-' + dd;
     var filepath = folder + '/' + date + '-' + feedtitle.replace(' ', '-') + '.html';
+    */
+    var filepath = folder + '/' + feedtitle.replace(' ', '-') + '.html'; 
     return filepath;
   },
   
@@ -27,9 +42,9 @@ module.exports = {
    * @param doc content to write to the file
    */
   writeDoc : function (filepath, doc) {
-    doc = "---\ntags : radiofrance\n---\n" + doc;
+    //doc = "---\ntags : radiofrance\n---\n" + doc;
     var fse = require('fs-extra');
-    fse.outputFile(filepath, doc, function (err) {
+    fse.outputFile(filepath, doc, {encoding : "utf8" }, function (err) {
       if (err) {
         console.log(err);
       }

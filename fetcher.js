@@ -1,12 +1,13 @@
 var FeedParser = require('feedparser');
 var request = require('request');
 var store = require('./store');
-var count = 0;
+var countF = 0;
+var countC = 0;
    
 module.exports = {
   fetch : function (feedurl, parseItems, radio) {
-    count++;
-    console.log(count);
+    countF++;
+    console.log(countF);
     var feedparser = new FeedParser();
     request.get(feedurl)
     .on('error', function (error) {
@@ -26,17 +27,21 @@ module.exports = {
       console.log('fetching feed ' + meta.title);
       store.storeFeed(feedurl, meta.title, radio);
     });
+
+    feedparser.on('end', function () {
+      countC++;
+      console.log(countC);
+    });
     
     feedparser.on('readable', function() {    
-      if (parseItems) {
-        var stream = this;
-        var item;
-        while (item = stream.read()) {
+      var stream = this;
+      var item;
+      while (item = stream.read()) {
+        if (parseItems) {
           store.storeItem(item);
         }
       }
     });
-    
   }
   
 };

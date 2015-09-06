@@ -13,16 +13,18 @@ module.exports = {
   
   disconnect : function () {
     console.log('MD closing');
-    db.close();
+    if (db) {
+      db.close();
+    }
   },
   
   storeItem : function (item) {
-    var MongoClient = require('mongodb').MongoClient;
+    //var MongoClient = require('mongodb').MongoClient;
     var format = require('util').format;
  
-    console.log('MD opening for storing item ' + item.guid);
-    MongoClient.connect('mongodb://127.0.0.1:27017/test', function(err, db) {
-      if(err) throw err;
+    //console.log('MD opening for storing item ' + item.guid);
+    //MongoClient.connect('mongodb://127.0.0.1:27017/test', function(err, db) {
+      //if(err) throw err;
    
       var collection = db.collection('rssitem');
       
@@ -32,10 +34,10 @@ module.exports = {
         if (err) {
           console.log(err);
         }
-        db.close();
+        //db.close();
       });
       
-    });
+    //});
   },
 
   ifNoFeedFound : function (feedurl, callback) {

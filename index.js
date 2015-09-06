@@ -47,7 +47,9 @@
   app.get('/feed/add', function(req, res){
     if (req.query.url) {
       console.log("adding feed at " + req.query.url);
+      store.connect();
       fetcher.fetch(req.query.url, true);
+      store.disconnect();
       res.render('message', {'message' : 'Programme ajouté', 'link' : '/home'});
     } else {
       res.render('message', {'message' : 'on attend le format : /feed/add?url=<page rss fu flux>', 'link' : '/home'});
@@ -58,6 +60,7 @@
     console.log("refreshing feeds ");
     var linkDisplay = '/home';
     
+    store.connect();
     if (req.query.feed) {
       store.retrieveFeed(req.query.feed,
         function (docs) {
@@ -78,12 +81,13 @@
         }
       );      
     }
+    store.disconnect();
     
     res.render('message', {'message' : 'Émissions rafraîchies', 'link' : linkDisplay});
   });
 
   app.get('/rf/parse', function(req, res){
-    //finder.findFeeds('./francemusique.html', 'fm');
+    finder.findFeeds('./francemusique.html', 'fm');
     finder.findFeeds('./franceinter.html', 'fi');
     //finder.findFeeds('./franceculture.html', 'fc');
       res.render('message', {'message' : 'De nombreux programmes sont ajoutés, cela va prendre un moment.', 'link' : '/home'});

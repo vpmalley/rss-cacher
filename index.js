@@ -87,7 +87,7 @@
   });
 
   app.get('/rf/parse', function(req, res){
-    finder.findFeeds('./francemusique.html', 'fm');
+    //finder.findFeeds('./francemusique.html', 'fm');
     finder.findFeeds('./franceinter.html', 'fi');
     //finder.findFeeds('./franceculture.html', 'fc');
       res.render('message', {'message' : 'De nombreux programmes sont ajoutés, cela va prendre un moment.', 'link' : '/home'});
@@ -140,7 +140,7 @@
           for (var i = 0; i < docs.length; i++) {
             console.log("printing feed " + docs[i].title);
             printFeed(req.query.radio, docs[i].title);
-            docs[i].link = './' + docs[i].title.replace(' ', '-') + '.html'
+            docs[i].link = './' + docs[i].title.replace('/', '-').replace(' ', '-') + '.html'
           }
           printRadio(req.query.radio, docs);
           res.end('printed');

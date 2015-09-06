@@ -74,6 +74,8 @@ module.exports = {
       };
       if (radio) {
         feed.radio = radio;
+      } else {
+        feed = { '$set' : feed };
       }
       collection.updateOne({url : feedurl}, feed, 
       {upsert : true}, function(err, docs) {

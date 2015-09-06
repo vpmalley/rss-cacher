@@ -32,7 +32,7 @@ module.exports = {
     var date = yyyy + '-' + mm + '-' + dd;
     var filepath = folder + '/' + date + '-' + feedtitle.replace(' ', '-') + '.html';
     */
-    var filepath = folder + '/' + feedtitle.replace(' ', '-') + '.html'; 
+    var filepath = folder + '/' + feedtitle.replace('/', '-').replace(' ', '-') + '.html'; 
     return filepath;
   },
   

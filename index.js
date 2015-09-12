@@ -140,7 +140,7 @@
           for (var i = 0; i < docs.length; i++) {
             console.log("printing feed " + docs[i].title);
             printFeed(req.query.radio, docs[i].title);
-            docs[i].link = './' + docs[i].title.replace('/', '-').replace(' ', '-') + '.html'
+            docs[i].link = './' + writer.getFileName(docs[i].title);
           }
           printRadio(req.query.radio, docs);
           res.end('printed');
@@ -151,7 +151,7 @@
 
   function printRadio(radio, feeds) {
     var doc = writer.generateRadioHtml(radio, feeds);
-    var filepath = writer.getFilePath(radio, 'index');
+    var filepath = radio + '/' + writer.getFileName('index');
     console.log(filepath);
     writer.writeDoc('output/' + filepath, doc);
   }
@@ -161,7 +161,7 @@
       docs = docs || {};
       console.log(docs.length);
       var doc = writer.generateFeedHtml(feedtitle, docs);
-      var filepath = writer.getFilePath(folder, feedtitle);
+      var filepath = folder + '/' + writer.getFileName(feedtitle);
       console.log(filepath);
       writer.writeDoc('output/' + filepath, doc);
     });

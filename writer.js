@@ -23,7 +23,7 @@ module.exports = {
     return fn({'message': 'Les programmes de ' + radio, 'feeds': feeds});
   },
   
-  getFilePath : function (folder, feedtitle) {
+  getFileName : function (feedtitle) {
     /*
     var today = new Date();
     var dd = today.getDate();
@@ -32,7 +32,7 @@ module.exports = {
     var date = yyyy + '-' + mm + '-' + dd;
     var filepath = folder + '/' + date + '-' + feedtitle.replace(' ', '-') + '.html';
     */
-    var filepath = folder + '/' + feedtitle.replace('/', '-').replace(' ', '-') + '.html'; 
+    var filepath = feedtitle.replace(/\//gm, '-').replace(/\?/gm, '').replace(/\W/gm, '-') + '.html'; 
     return filepath;
   },
   

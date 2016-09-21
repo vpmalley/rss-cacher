@@ -30,10 +30,12 @@
   });
 
   app.get('/home', function(req, res){
+    store.connect();
     store.retrieveAllFeeds(function(feeds) {
       console.log(feeds.length);
       res.render('home', {'feeds': feeds});
     });
+    store.disconnect();
   });
 
   app.get('/feed', function(req, res){
@@ -98,6 +100,7 @@
   //----------
 
   app.get('/feed/display', function(req, res){
+    store.connect();
     if (req.query.radio) {
       store.retrieveRadioFeeds(req.query.radio, function(feeds) {
         console.log(feeds.length);
@@ -109,23 +112,27 @@
         res.render('home', {'feeds': feeds});
       });
     }
+    store.disconnect();
   });
 
   app.get('/item/all', function(req, res){
+    store.connect();
     store.retrieveAllItems(function(docs) {
       console.log(docs.length);
       res.render('items', {'message': 'tous les programmes', 'docs': docs, 'query' : ''});
     });
+    store.disconnect();
   });
 
   app.get('/item/search', function(req, res){
-
     // search by feed name
     if (req.query.feed) {
+      store.connect();
       store.retrieveAllItemsForFeed(req.query.feed, function(docs) {
         console.log(docs.length);
         res.render('items', {'message': 'le programme ' + req.query.feed, 'docs': docs, 'query' : '?feed=' + req.query.feed});
       });
+      store.disconnect();
     }
   });
 
@@ -135,6 +142,7 @@
 
   app.get('/feed/print', function(req, res){
     if (req.query.radio) {
+      store.connect();
       store.retrieveRadioFeeds(req.query.radio,
         function (docs) {
           for (var i = 0; i < docs.length; i++) {
@@ -146,6 +154,7 @@
           res.render('message', {'message' : 'Émissions exportées', 'link' : '/home'});
         }
       );
+      store.disconnect();
     } else {
       res.end('This argument is missing');
     }
@@ -159,7 +168,8 @@
   }
 
   function printFeed(folder, feedtitle) {
-      store.retrieveAllItemsForFeed(feedtitle, function(docs) {
+    store.connect();
+    store.retrieveAllItemsForFeed(feedtitle, function(docs) {
       docs = docs || {};
       console.log(docs.length);
       var doc = writer.generateFeedHtml(feedtitle, docs);
@@ -167,6 +177,7 @@
       console.log(filepath);
       writer.writeDoc('output/' + filepath, doc);
     });
+    store.disconnect();
   }
 
   app.listen(process.argv[2]);

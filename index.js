@@ -7,10 +7,10 @@
   var express = require('express');
   var async = require("async");
   var app = express();
-  
+
   app.set('view engine', 'jade');
   app.set('views', './templates');
-  
+
   app.use(express.static('./static'));
   app.use(stylus.middleware('./static'));
 
@@ -21,7 +21,7 @@
   function getHomePage() {
     return "Welcome to rss-cacher.\n\n" +
     "/feed/add?url=<feedurl>  ...  adds a feed to your list of watched feeds\n" +
-    "/feed/refresh            ...  refreshes all of your watched feeds\n" + 
+    "/feed/refresh            ...  refreshes all of your watched feeds\n" +
     "/item/all                ...  displays a list of all collected items\n";
   }
 
@@ -35,15 +35,15 @@
       res.render('home', {'feeds': feeds});
     });
   });
-  
+
   app.get('/feed', function(req, res){
     res.end(getHomePage());
   });
-  
+
   //----------
   // adding feeds
   //----------
- 
+
   app.get('/feed/add', function(req, res){
     if (req.query.url) {
       console.log("adding feed at " + req.query.url);
@@ -55,11 +55,11 @@
       res.render('message', {'message' : 'on attend le format : /feed/add?url=<page rss fu flux>', 'link' : '/home'});
     }
   });
-  
+
   app.get('/feed/refresh', function(req, res){
     console.log("refreshing feeds ");
     var linkDisplay = '/home';
-    
+
     store.connect();
     if (req.query.feed) {
       store.retrieveFeed(req.query.feed,
@@ -79,10 +79,10 @@
             setTimeout(callback, 1000);
           });
         }
-      );      
+      );
     }
     store.disconnect();
-    
+
     res.render('message', {'message' : 'Émissions rafraîchies', 'link' : linkDisplay});
   });
 
@@ -92,7 +92,7 @@
     //finder.findFeeds('./franceculture.html', 'fc');
       res.render('message', {'message' : 'De nombreux programmes sont ajoutés, cela va prendre un moment.', 'link' : '/home'});
   });
-  
+
   //----------
   // displaying feeds
   //----------
@@ -107,19 +107,19 @@
       store.retrieveAllFeeds(function(feeds) {
         console.log(feeds.length);
         res.render('home', {'feeds': feeds});
-      });      
+      });
     }
   });
-  
+
   app.get('/item/all', function(req, res){
     store.retrieveAllItems(function(docs) {
       console.log(docs.length);
       res.render('items', {'message': 'tous les programmes', 'docs': docs, 'query' : ''});
     });
   });
-  
+
   app.get('/item/search', function(req, res){
-    
+
     // search by feed name
     if (req.query.feed) {
       store.retrieveAllItemsForFeed(req.query.feed, function(docs) {
@@ -128,11 +128,11 @@
       });
     }
   });
-  
+
   //----------
   // printing feeds
   //----------
-  
+
   app.get('/feed/print', function(req, res){
     if (req.query.radio) {
       store.retrieveRadioFeeds(req.query.radio,
@@ -143,9 +143,11 @@
             docs[i].link = './' + writer.getFileName(docs[i].title);
           }
           printRadio(req.query.radio, docs);
-          res.end('printed');
+          res.render('message', {'message' : 'Émissions exportées', 'link' : '/home'});
         }
       );
+    } else {
+      res.end('This argument is missing');
     }
   });
 
@@ -155,7 +157,7 @@
     console.log(filepath);
     writer.writeDoc('output/' + filepath, doc);
   }
-  
+
   function printFeed(folder, feedtitle) {
       store.retrieveAllItemsForFeed(feedtitle, function(docs) {
       docs = docs || {};
@@ -166,6 +168,5 @@
       writer.writeDoc('output/' + filepath, doc);
     });
   }
-  
-  app.listen(process.argv[2]);
 
+  app.listen(process.argv[2]);
